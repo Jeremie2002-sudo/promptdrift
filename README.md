@@ -31,10 +31,18 @@ That reframing is what makes the whole thing tractable. You don't need absolute 
 ## Quickstart
 
 ```bash
-pip install -e ".[dev]"
+pip install git+https://github.com/Jeremie2002-sudo/promptdrift
 ```
 
-Runs against a **local model via [Ollama](https://ollama.com) by default — no API key, no cost.** PromptDrift's own test suite uses a deterministic mock backend, so it needs no model at all.
+Not on PyPI — install from the repo. Python 3.10+.
+
+See it work immediately, with no model and no network:
+
+```bash
+promptdrift run examples/offline_demo/suite.yaml --no-baseline -v
+```
+
+For real use it runs against a **local model via [Ollama](https://ollama.com) — no API key, no cost.** PromptDrift's own test suite uses a deterministic mock backend, so CI needs no model at all.
 
 ```bash
 ollama pull llama3.2
@@ -216,12 +224,18 @@ promptdrift run suite.yaml --provider groq --model llama-3.3-70b-versatile
 ## Development
 
 ```bash
+git clone https://github.com/Jeremie2002-sudo/promptdrift && cd promptdrift && pip install -e ".[dev]"
+```
+
+```bash
 pytest
 ```
 
 ```bash
 ruff check .
 ```
+
+157 tests, all offline — the mock backend means the suite needs no model, no API key and no network.
 
 ## License
 
