@@ -14,3 +14,4 @@ htmlcov/
 # PromptDrift writes baselines to .promptdrift/ by default. Baselines are meant
 # to be committed -- that is the whole point -- so they are deliberately NOT
 # ignored here.
+dist/

@@ -1,26 +1,30 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
 
 [project]
 name = "promptdrift"
-version = "0.1.0"
+# Single-sourced from src/promptdrift/__init__.py -- see [tool.hatch.version].
+# Keeping the number in two places is a guaranteed drift bug: you bump one,
+# ship, and `promptdrift --version` lies about which build is installed.
+dynamic = ["version"]
 description = "Regression testing for LLM prompts. Catch prompt changes that make things worse, before they ship."
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "David Jeremie Anand", email = "jerryanand10@gmail.com" }]
 keywords = ["llm", "evaluation", "testing", "prompt-engineering", "regression-testing", "ci"]
 
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Testing",
+    "Typing :: Typed",
 ]
 
 dependencies = [
@@ -42,9 +46,24 @@ promptdrift = "promptdrift.cli:main"
 [project.urls]
 Homepage = "https://github.com/Jeremie2002-sudo/promptdrift"
 Issues = "https://github.com/Jeremie2002-sudo/promptdrift/issues"
+Source = "https://github.com/Jeremie2002-sudo/promptdrift"
+
+[tool.hatch.version]
+path = "src/promptdrift/__init__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/promptdrift"]
+
+# Ship tests and examples in the sdist. They are the documentation that proves
+# the tool does what the README claims, and they cost a few KB.
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src",
+    "/tests",
+    "/examples",
+    "/README.md",
+    "/LICENSE",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
