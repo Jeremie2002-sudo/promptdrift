@@ -1,0 +1,59 @@
+# A suite that needs no model at all -- it runs against the deterministic mock
+# backend. Use it to see what PromptDrift does without pulling anything:
+#
+#   promptdrift run examples/offline_demo/suite.yaml --no-baseline
+#
+# The mock returns a canned reply for any prompt containing the given substring,
+# which is exactly enough to exercise every part of the pipeline.
+
+name: offline-demo
+description: Demonstrates PromptDrift end to end with no model and no network
+
+backend:
+  provider: mock
+  model: canned
+  options:
+    responses:
+      "charged twice": "BILLING"
+      "app crashes": "TECHNICAL"
+      "reset link": "ACCOUNT"
+    default: "OTHER"
+
+prompt: |
+  Classify the ticket. Reply with only the label.
+
+  Ticket: {{ticket}}
+
+samples: 2
+pass_threshold: 1.0
+
+cases:
+  - name: billing
+    vars:
+      ticket: "I was charged twice this month"
+    assert:
+      - type: equals
+        value: BILLING
+
+  - name: technical
+    vars:
+      ticket: "the app crashes on launch"
+    assert:
+      - type: equals
+        value: TECHNICAL
+      - type: max_words
+        value: 1
+
+  - name: account
+    vars:
+      ticket: "the reset link expired"
+    assert:
+      - type: one_of
+        value: [ACCOUNT, TECHNICAL]
+
+  - name: falls-through-to-other
+    vars:
+      ticket: "something entirely unrelated"
+    assert:
+      - type: equals
+        value: OTHER

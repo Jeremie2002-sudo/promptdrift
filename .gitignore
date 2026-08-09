@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+.env
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# PromptDrift writes baselines to .promptdrift/ by default. Baselines are meant
+# to be committed -- that is the whole point -- so they are deliberately NOT
+# ignored here.
